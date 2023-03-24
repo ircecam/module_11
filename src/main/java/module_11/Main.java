@@ -9,8 +9,9 @@ import java.util.stream.Stream;
 public class Main {
 
     public static void main(String[] args) {
-        List <String> names = new ArrayList<>(Arrays.asList("Adam","Gregor","Bob","James","Harry","Sid","Zed","Dilan"));
-        List <String> numbers = new ArrayList<>(Arrays.asList("1, 2, 0","4, 5"));
+        String [] names = new String[] {"Adam","Gregor","Bob","James","Harry","Sid","Zed","Dilan"};
+        String [] numbers = new String[] {"1, 2, 0","4, 5","66, 14, 3"};
+
         long seed = 1l;
         long a = 25214903917l;
         long c = 11l;
@@ -27,32 +28,30 @@ public class Main {
         System.out.println(zip(Stream.of(1, 2, 3, 4), Stream.of(5, 6, 7, 8)).toList());
 
     }
-    public static List <String> getOddNames(List <String> names){
+    public static List <String> getOddNames(String [] namesArr){
+        List <String> names = Arrays.asList(namesArr);
         Stream<String> namesStream = names.stream().filter(name -> names.indexOf(name) % 2 == 0).map(name ->  names.indexOf(name) + 1  + ". " + name);
 
         List<String> filteredNames = namesStream.collect(Collectors.toList());
         return filteredNames;
     }
-    public static List <String> getReversedNames(List <String> names){
+    public static List <String> getReversedNames(String [] namesArr){
+        List <String> names = Arrays.asList(namesArr);
         Stream<String> namesStream = names.stream().sorted(Comparator.reverseOrder()).map(name ->  name.toUpperCase());
 
         List<String> filteredNames = namesStream.collect(Collectors.toList());
         return filteredNames;
     }
-    public static String getIntegers(List <String> numbers){
+    public static String getIntegers(String [] numbersArr){
+        List <String> numbers = Arrays.asList(numbersArr);
         Stream<String> numbersStream = numbers.stream()
                                         .map(str -> List.of(str.split(", ")))
-                                        .flatMap(Collection::stream)
-                                        .sorted();
+                                        .flatMap(Collection::stream);
 
+        List<Integer> integers = numbersStream.map(str -> Integer.valueOf(str)).collect(Collectors.toList());
+        integers.sort(Comparator.naturalOrder());
 
-        List<String> integers = numbersStream.collect(Collectors.toList());
-
-
-        return integers.stream().collect(Collectors.joining(", "));
-
-
-
+        return integers.stream().map(it -> Integer.toString(it)).collect(Collectors.joining(", "));
     }
 
     public static Stream<Long> iterateStream(long seed, long a, long c, long m){
